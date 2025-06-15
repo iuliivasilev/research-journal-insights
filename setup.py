@@ -3,7 +3,9 @@ import pandas as pd
 def create_readme():
     df = pd.read_excel('./source/JournalsQ1Q2.xlsx')
     df = df.fillna('')
-    markdown_table = df.to_markdown(index=False)
+    df['Journal'] = "[" + df['Journal'] + "](" + df['Link'] + ")"
+    df = df.astype("str")
+    markdown_table = df[["Journal", "Q", "APC", "Комментарии + Turnaround time"]].to_markdown(index=False)
 
     with open('./source/Canvas.md', 'r') as file:
         content = file.readlines()
