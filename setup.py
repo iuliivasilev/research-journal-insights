@@ -1,17 +1,18 @@
 import pandas as pd
 from openpyxl import load_workbook
 
-def read_excel_in_scratch(file_path, sheet_name="Q1-Q2"):
+def read_excel_in_scratch(file_path, sheet_name="Q1-Q2", link_columns=["Link"]):
     workbook = load_workbook(file_path)
     sheet = workbook[sheet_name]
 
     data = []
     columns = [cell.value for cell in sheet[1]]  # Получаем заголовки из первой строки
+    link_indices = [i for i, col in enumerate(columns) if col in link_columns]
     for row in sheet.iter_rows(min_row=2):  # Пропускаем заголовок, возвращаем объекты ячеек
         l = []
         for i in range(len(row)):
             cell = row[i]
-            if cell.hyperlink:
+            if cell.hyperlink and not(i in link_indices):
                 l.append(f"[{cell.value}]({cell.hyperlink.target})")
             else:
                 l.append(cell.value)
